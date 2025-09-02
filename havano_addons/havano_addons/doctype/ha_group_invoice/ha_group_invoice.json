@@ -1,0 +1,269 @@
+{
+  "actions": [],
+  "allow_import": 1,
+  "autoname": "format:CUST-INV-{YYYY}-{MM}-{#####}",
+  "creation": "2025-09-01 10:51:51.773746",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "group_customer",
+    "company",
+    "total_customers",
+    "col_break_1",
+    "posting_date",
+    "posting_time",
+    "edit_posting_datetime",
+    "col_break_2",
+    "payment_due_date",
+    "section_break_1",
+    "acc_dim_col_1",
+    "cost_center",
+    "acc_dim_col_2",
+    "project",
+    "section_break_2",
+    "currency_col_1",
+    "currency",
+    "currency_col_2",
+    "price_list",
+    "section_break_3",
+    "update_stock",
+    "source_warehouse",
+    "items",
+    "section_break_4",
+    "acc_col_1",
+    "cost_center_item",
+    "income_account",
+    "acc_col_2",
+    "grand_total"
+  ],
+  "fields": [
+    {
+      "fieldname": "group_customer",
+      "fieldtype": "Link",
+      "label": "Group Customer",
+      "options": "Customer Group",
+      "reqd": 1,
+      "in_list_view": 1,
+      "width": "150px"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "reqd": 0,
+      "in_list_view": 1,
+      "width": "120px"
+    },
+    {
+      "fieldname": "total_customers",
+      "fieldtype": "Int",
+      "label": "Total Customers",
+      "read_only": 1,
+      "in_list_view": 1,
+      "width": "80px"
+    },
+    {
+      "fieldname": "col_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Today",
+      "fieldname": "posting_date",
+      "fieldtype": "Date",
+      "label": "Date",
+      "reqd": 1,
+      "read_only": 1,
+      "in_list_view": 1,
+      "width": "100px"
+    },
+    {
+      "default": "Now",
+      "fieldname": "posting_time",
+      "fieldtype": "Time",
+      "label": "Posting Time",
+      "read_only": 1
+    },
+    {
+      "fieldname": "edit_posting_datetime",
+      "fieldtype": "Check",
+      "label": "Edit Posting Date and Time"
+    },
+    {
+      "fieldname": "col_break_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "payment_due_date",
+      "fieldtype": "Date",
+      "label": "Payment Due Date",
+      "reqd": 1,
+      "in_list_view": 1,
+      "width": "100px"
+    },
+    {
+      "fieldname": "section_break_1",
+      "fieldtype": "Section Break",
+      "label": "Accounting Dimensions"
+    },
+    {
+      "fieldname": "acc_dim_col_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "cost_center",
+      "fieldtype": "Link",
+      "label": "Cost Center",
+      "options": "Cost Center",
+      "in_list_view": 1,
+      "width": "120px"
+    },
+    {
+      "fieldname": "acc_dim_col_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "label": "Project",
+      "options": "Project"
+    },
+    {
+      "fieldname": "section_break_2",
+      "fieldtype": "Section Break",
+      "label": "Currency and Price List"
+    },
+    {
+      "fieldname": "currency_col_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "in_list_view": 1,
+      "width": "80px"
+    },
+    {
+      "fieldname": "currency_col_2",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "price_list",
+      "fieldtype": "Link",
+      "label": "Price List",
+      "options": "Price List"
+    },
+    {
+      "fieldname": "section_break_3",
+      "fieldtype": "Section Break",
+      "label": "Items"
+    },
+    {
+      "default": 0,
+      "fieldname": "update_stock",
+      "fieldtype": "Check",
+      "label": "Update Stock"
+    },
+    {
+      "fieldname": "source_warehouse",
+      "fieldtype": "Link",
+      "label": "Source Warehouse",
+      "options": "Warehouse",
+      "depends_on": "eval:doc.update_stock == 1"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Ha Group Invoice Item",
+      "reqd": 1
+    },
+    {
+      "fieldname": "section_break_4",
+      "fieldtype": "Section Break",
+      "label": "Totals"
+    },
+    {
+      "fieldname": "grand_total",
+      "fieldtype": "Currency",
+      "label": "Grand Total",
+      "read_only": 0
+    },
+    {
+        "fieldname": "creation_status",
+        "fieldtype": "Long Text",
+        "label": "Creation Status",
+        "read_only": 1,
+        "hidden": 1
+    },
+    {
+      "fieldname": "status_summary",
+      "fieldtype": "Data",
+      "label": "Status",
+      "read_only": 1,
+      "in_list_view": 1,
+      "width": "120px",
+      "fetch_from": "creation_status",
+      "fetch_if_empty": 1
+    }
+  ],
+  "is_submittable": 1,
+  "modified": "2025-09-01 12:19:30.915015",
+  "modified_by": "Administrator",
+  "module": "havano_addons",
+  "name": "Ha Group Invoice",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "amend": 1,
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "cancel": 1,
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "Accounts User",
+      "submit": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "Sales User",
+      "write": 1
+    }
+  ],
+  "row_format": "Dynamic",
+  "show_name_in_global_search": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1,
+  "list_view_settings": {
+    "fields": [
+      "name",
+      "group_customer",
+      "company",
+      "total_customers",
+      "posting_date",
+      "payment_due_date",
+      "grand_total",
+      "currency",
+      "cost_center",
+      "project",
+      "status_summary",
+      "docstatus"
+    ],
+    "columns": 12
+  }
+}

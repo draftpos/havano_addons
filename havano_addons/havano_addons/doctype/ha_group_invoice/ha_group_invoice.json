@@ -208,12 +208,15 @@
       "fetch_from": "creation_status",
       "fetch_if_empty": 1
     }
+
   ],
   "is_submittable": 1,
   "modified": "2025-09-01 12:19:30.915015",
   "modified_by": "Administrator",
   "module": "havano_addons",
   "name": "Ha Group Invoice",
+  "client_script": "havano_addons.havano_addons.doctype.ha_group_invoice.ha_group_invoice.js",
+  "list_view": "havano_addons/havano_addons/doctype/ha_group_invoice/ha_group_invoice_list.js",
   "owner": "Administrator",
   "permissions": [
     {

@@ -16,8 +16,29 @@ class HaGroupInvoice(Document):
         self.calculate_grand_total()
     
     def on_submit(self):
-        # Create Sales Invoices for all customers in the group
         self.create_sales_invoices()
+
+
+
+
+
+
+
+    def before_submit(self):
+        # Store the original group for reference
+        self.original_group_customer = self.group_customer
+    
+    def on_update_after_submit(self):
+        # Allow group customer changes after submission only through promote functionality
+        if hasattr(self, '_is_promoting') and self._is_promoting:
+            return
+        # Otherwise, prevent changes
+        if self.group_customer != self.original_group_customer:
+            frappe.throw(_("Not allowed to change Group Customer after submission"))
+
+
+
+
         
     @frappe.whitelist()
     def update_total_customers(self):
@@ -141,9 +162,49 @@ class HaGroupInvoice(Document):
         }).insert(ignore_permissions=True)
 
 
+
 @frappe.whitelist()
 def create_invoices_now(docname):
     """Manual method to create invoices without submitting"""
     doc = frappe.get_doc('Ha Group Invoice', docname)
     doc.create_sales_invoices()
     return True
+
+
+
+
+
+
+
+@frappe.whitelist()
+def get_customer_count(from_group, to_group):
+    """Get count of customers in the from_group"""
+    count = frappe.db.count('Customer', {'customer_group': from_group})
+    return {'count': count}
+
+@frappe.whitelist()
+def bulk_promote_customers(from_group, to_group):
+    """Move all customers from one group to another"""
+    try:
+        # Get all customers in the from_group
+        customers = frappe.get_all('Customer',
+            filters={'customer_group': from_group},
+            pluck='name'
+        )
+        
+        promoted_count = 0
+        for customer_name in customers:
+            frappe.db.set_value('Customer', customer_name, 'customer_group', to_group)
+            promoted_count += 1
+        
+        frappe.db.commit()
+        
+        return {
+            "success": True,
+            "promoted_count": promoted_count
+        }
+        
+    except Exception as e:
+        frappe.db.rollback()
+        frappe.log_error(frappe.get_traceback(), "Bulk Customer Promotion Error")
+        frappe.throw(_("Error promoting customers: {0}").format(str(e)))

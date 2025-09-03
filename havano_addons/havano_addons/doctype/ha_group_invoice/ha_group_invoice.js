@@ -119,5 +119,55 @@ function calculate_item_amount(frm, cdt, cdn) {
 
 
 
-
-
+frappe.ui.form.on('Ha Group Invoice', {
+    refresh: function(frm) {
+        // Enable in-cell editing and quick search for items table
+        if (frm.fields_dict.items) {
+            const grid = frm.fields_dict.items.grid;
+            
+            // Enable cell editing (this allows quick search on click)
+            grid.set_allow_editing(true);
+            
+            // Set up item query for quick search
+            grid.set_columns_editable(['item_code', 'qty', 'rate', 'cost_center', 'project']);
+            
+            // Add custom behavior for item code field
+            grid.grid_rows.forEach(function(row) {
+                const item_code_field = row.docfields.find(f => f.fieldname === 'item_code');
+                if (item_code_field) {
+                    item_code_field.get_control = function() {
+                        const control = frappe.ui.form.make_control({
+                            parent: this.wrapper,
+                            df: {
+                                fieldtype: 'Link',
+                                fieldname: 'item_code',
+                                options: 'Item',
+                                get_query: function() {
+                                    return {
+                                        query: "erpnext.controllers.queries.item_query",
+                                        filters: {'is_sales_item': 1}
+                                    };
+                                }
+                            },
+                            render_input: true
+                        });
+                        return control;
+                    };
+                }
+            });
+        }
+    },
+    
+    setup: function(frm) {
+        // Set up item query for both form and quick entry
+        frm.set_query('item_code', 'items', function(doc, cdt, cdn) {
+            return {
+                query: "erpnext.controllers.queries.item_query",
+                filters: {
+                    'is_sales_item': 1,
+                    'disabled': 0
+                }
+            };
+        });
+    }
+});

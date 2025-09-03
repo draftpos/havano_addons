@@ -1,5 +1,3 @@
-from .hooks_methods .creating_customer_field import update_customer_doctype
-
 app_name = "havano_addons"
 app_title = "Havano Addons"
 app_publisher = "showlina"
@@ -8,7 +6,6 @@ app_email = "wisdommapeka@gmail.com"
 app_license = "mit"
 
 
-on_install  = "havano_addons.hooks_methods.creating_customer_field.update_customer_doctype"
 # Apps
 # ------------------
 

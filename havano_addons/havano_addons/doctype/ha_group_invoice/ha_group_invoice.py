@@ -4,6 +4,7 @@ from frappe.model.document import Document
 from frappe.utils import nowdate, getdate, flt, cint, now_datetime
 from frappe import _
 import json
+from ....hooks_methods.get_customers_with_groups import get_all_customers_from_groups_and_sub_groups
 
 class HaGroupInvoice(Document):
     def validate(self):
@@ -21,10 +22,8 @@ class HaGroupInvoice(Document):
     @frappe.whitelist()
     def update_total_customers(self):
         """Update the total number of customers in the selected group"""
-        customers_count = frappe.db.count('Customer', {
-            'customer_group': self.group_customer,
-            'disabled': 0
-        })
+        customers = get_all_customers_from_groups_and_sub_groups(self)
+        customers_count = len(customers) if customers else 0
         self.total_customers = customers_count
     
     def calculate_grand_total(self):
@@ -40,13 +39,7 @@ class HaGroupInvoice(Document):
     
     def create_sales_invoices(self):
         """Create Sales Invoices for all customers in the group"""
-        customers = frappe.get_all('Customer',
-            filters={
-                'customer_group': self.group_customer,
-                'disabled': 0
-            },
-            fields=['name', 'customer_name']
-        )
+        customers = get_all_customers_from_groups_and_sub_groups(self)
         
         if not customers:
             frappe.throw(_("No active customers found in the selected group"))

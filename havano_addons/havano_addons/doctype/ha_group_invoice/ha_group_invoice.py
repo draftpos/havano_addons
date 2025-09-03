@@ -185,6 +185,7 @@ def get_customer_count(from_group, to_group):
 @frappe.whitelist()
 def bulk_promote_customers(from_group, to_group):
     """Move all customers from one group to another"""
+    print("----------------------BULK PROMOTE RUN --------------------------------")
     try:
         # Get all customers in the from_group
         customers = frappe.get_all('Customer',

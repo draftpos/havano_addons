@@ -1,0 +1,17 @@
+setup.py
+havano_addons/__init__.py
+havano_addons/hooks.py
+havano_addons.egg-info/PKG-INFO
+havano_addons.egg-info/SOURCES.txt
+havano_addons.egg-info/dependency_links.txt
+havano_addons.egg-info/top_level.txt
+havano_addons/config/__init__.py
+havano_addons/havano_addons/__init__.py
+havano_addons/havano_addons/doctype/__init__.py
+havano_addons/havano_addons/doctype/ha_group_invoice/__init__.py
+havano_addons/havano_addons/doctype/ha_group_invoice/ha_group_invoice.py
+havano_addons/havano_addons/doctype/ha_group_invoice/test_ha_group_invoice.py
+havano_addons/hooks_methods/__init__.py
+havano_addons/hooks_methods/get_customers_with_groups.py
+havano_addons/templates/__init__.py
+havano_addons/templates/pages/__init__.py

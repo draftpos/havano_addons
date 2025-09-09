@@ -1,22 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='havano_addons ',  # Use hyphens instead of spaces
-    version='0.1.0',          # Required: Package version
-    author='showline',             # Optional: Author name (capitalize if desired)
-    author_email='wisdommapeka@gmail.com',  # Optional: Author email
-    description='bulk invoice',  # Optional: Description
-    long_description=open('README.md').read(),  # Ensure README.md exists
-    long_description_content_type='text/markdown',  # Optional: Format of long description
-    url='https://github.com/draftpos/havano_addons.git',  # Ensure the URL is correct
-    packages=find_packages(),  # Automatically find packages in the directory
-    classifiers=[  # Optional: Classifiers for PyPI
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+    name='havano_addons',
+    version='0.1',
+    packages=find_packages(),
+    install_requires=[
+        # Add your dependencies here
     ],
-    python_requires='>=3.10',  # Optional: Specify Python version
-    install_requires=[],  # List of dependencies (add as needed)
 )

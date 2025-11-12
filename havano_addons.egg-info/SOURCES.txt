@@ -1,3 +1,4 @@
+pyproject.toml
 setup.py
 havano_addons/__init__.py
 havano_addons/hooks.py

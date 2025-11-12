@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:item_name",
+ "creation": "2025-11-12 11:20:33.825407",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "warehouse",
+  "item_code",
+  "simple_code",
+  "item_name",
+  "qty",
+  "value_at_cost",
+  "value_at_selling",
+  "expected_profit"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "label": "Item code",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "simple_code",
+   "fieldtype": "Data",
+   "label": "Simple code",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldtype": "Column Break",
+   "fieldname": "column_break_1"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item name",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty",
+   "precision": 2
+  },
+  {
+   "fieldname": "value_at_cost",
+   "fieldtype": "Currency",
+   "label": "Value at cost"
+  },
+  {
+   "fieldname": "value_at_selling",
+   "fieldtype": "Currency",
+   "label": "Value at selling"
+  },
+  {
+   "fieldname": "expected_profit",
+   "fieldtype": "Currency",
+   "label": "Expected profit"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-12 11:25:29.265182",
+ "modified_by": "Administrator",
+ "module": "Ha Item Stock Warehouse Summarised",
+ "name": "Item Warehouse Summary",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "naming": "item_name",
+ "list_view": {
+  "fields": [
+   "item_name",
+   "company",
+   "warehouse",
+   "item_code",
+   "qty",
+   "value_at_cost",
+   "value_at_selling",
+   "expected_profit"
+  ],
+  "filters": [
+   ["company", "like", "%"],
+   ["warehouse", "like", "%"],
+   ["item_code", "like", "%"],
+   ["item_name", "like", "%"]
+  ]
+ },
+ "filter_fields": [
+  "company",
+  "warehouse", 
+  "item_code",
+  "item_name",
+  "qty",
+  "value_at_cost",
+  "value_at_selling",
+  "expected_profit"
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

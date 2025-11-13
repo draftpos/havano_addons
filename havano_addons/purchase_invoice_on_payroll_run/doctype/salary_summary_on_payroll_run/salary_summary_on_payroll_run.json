@@ -38,6 +38,17 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1
+  },
+  {
+   "fieldname": "completed",
+   "fieldtype": "Select",
+   "label": "Completed",
+   "options":"yes\nno",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1
   }
  ],
  "grid_page_length": 50,

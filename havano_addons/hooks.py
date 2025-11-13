@@ -148,16 +148,15 @@ app_license = "mit"
 # }
 
 doc_events = {
-	"havano_salary_component": {
-        "validate":"havano_addons.hooks_methods.check_suplier_on_saving_salary_component.check_supplier_on_saving_salary_component"
-        # "on_update": "method",
-		# "on_cancel": "method",
-		# "on_trash": "method",
-        # "on_submit": "havano_addomns.hooks_methods.send_data_to_sales_invoice.send_data_to_sales_invoice"
-	},
+	"havano_salary_accounts": {
+        "validate": "havano_addons.hooks_methods.check_suplier_on_saving_salary_component.check_supplier_on_saving_salary_component",
+        # "on_submit": "havano_addons.hooks_methods.send_data_to_sales_invoice.send_data_to_sales_invoice"
+    },
     "Havano Payroll Entry": {
         "on_update":"havano_addons.hooks_methods.add_salary_components_summary.add_salary_components_summary"
     }
+
+    
 }
 
 # Scheduled Tasks

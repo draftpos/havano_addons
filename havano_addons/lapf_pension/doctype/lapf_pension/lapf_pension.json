@@ -98,10 +98,8 @@
     },
     {
       "fieldname": "employment_type",
-      "fieldtype": "Link",
-      "label": "Employment Type",
-      "options": "Employment Type",
-      "fetch_from": "employee_id.employment_type"
+      "fieldtype": "Data",
+      "label": "Employment Type"
     },
     {
       "fieldname": "section_break_1",

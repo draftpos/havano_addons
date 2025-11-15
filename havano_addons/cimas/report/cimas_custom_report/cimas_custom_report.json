@@ -1,0 +1,13 @@
+{
+  "name": "Cimas Custom Report",
+  "doctype": "Report",
+  "is_standard": "Yes",
+  "report_name": "Cimas Custom Report",
+  "ref_doctype": "Cimas",
+  "report_type": "Script Report",
+  "module": "Cimas",
+  "roles": [
+    {"role": "All"},
+    {"role": "System Manager"}
+  ]
+}

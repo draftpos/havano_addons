@@ -1,0 +1,139 @@
+{%- from "templates/print_formats/standard_macros.html" import add_header -%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ _("Payroll Summary Report") }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .report-title {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .summary-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .info-item {
+            margin: 5px 0;
+        }
+        .payroll-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .payroll-table th, .payroll-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .payroll-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .totals-row {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        .additional-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .signature-section {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-line {
+            border-top: 1px solid #333;
+            width: 200px;
+            text-align: center;
+            padding-top: 5px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">Nexus Gas</div>
+        <div class="report-title">Payroll Summary for the period of {{ filters.from_date }} to {{ filters.to_date }}</div>
+    </div>
+
+    <div class="summary-info">
+        <div>
+            <div class="info-item"><strong>Company:</strong> {{ filters.company }}</div>
+            <div class="info-item"><strong>Period:</strong> {{ filters.from_date }} to {{ filters.to_date }}</div>
+            <div class="info-item"><strong>Currency:</strong> USD</div>
+        </div>
+        <div>
+            <div class="info-item"><strong>Department:</strong> {{ filters.department or "All Departments" }}</div>
+            <div class="info-item"><strong>Total Employees:</strong> {{ report_summary[3].value }}</div>
+            <div class="info-item"><strong>Report Date:</strong> {{ frappe.datetime.now_datetime().strftime('%Y-%m-%d') }}</div>
+        </div>
+    </div>
+
+    <table class="payroll-table">
+        <thead>
+            <tr>
+                <th>Earnings</th>
+                <th>Amount (USD)</th>
+                <th>Deductions</th>
+                <th>Amount (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr {% if row.bold %}class="totals-row"{% endif %}>
+                <td>{{ row.earnings_component or "" }}</td>
+                <td>{{ frappe.format(row.earnings_amount, {'fieldtype': 'Currency'}) if row.earnings_amount else "" }}</td>
+                <td>{{ row.deductions_component or "" }}</td>
+                <td>{{ frappe.format(row.deductions_amount, {'fieldtype': 'Currency'}) if row.deductions_amount else "" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="additional-info">
+        <p><strong>Medical Deductions:</strong> {{ get_medical_deductions(filters) | flt }} USD</p>
+        <p><strong>Tax Credit (SFR of Medically $14.25)</strong></p>
+        <p><strong>Net Pay:</strong> {{ report_summary[2].value | flt }} USD</p>
+    </div>
+
+    <div class="signature-section">
+        <div>
+            <div class="signature-line">Employer's Signature</div>
+        </div>
+        <div>
+            <div class="signature-line">Employer's Signature</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Processed by Havano ESP Integration</p>
+        <p>Annual report</p>
+    </div>
+</body>
+</html>

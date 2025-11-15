@@ -1,0 +1,13 @@
+{
+  "name": "LAPF Pension Custom Report",
+  "doctype": "Report",
+  "is_standard": "Yes",
+  "report_name": "LAPF Pension Custom Report",
+  "ref_doctype": "LAPF Pension",
+  "report_type": "Script Report",
+  "module": "lapf_pension",
+  "roles": [
+    {"role": "All"},
+    {"role": "System Manager"}
+  ]
+}

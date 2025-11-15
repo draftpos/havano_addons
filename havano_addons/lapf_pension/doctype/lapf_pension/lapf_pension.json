@@ -112,16 +112,7 @@
       "label": "Remarks"
     }
   ],
-  "links": [
-    {
-      "link_doctype": "Employee",
-      "link_fieldname": "employee_id"
-    },
-    {
-      "link_doctype": "Payroll Entry",
-      "link_fieldname": "payroll_period"
-    }
-  ],
+ 
   "owner": "Administrator",
  "permissions": [
     {

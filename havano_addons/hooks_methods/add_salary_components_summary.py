@@ -4,7 +4,7 @@ from frappe.model.document import Document
 from frappe.utils import nowdate, getdate, flt, cint, now_datetime
 from frappe import _
 import json
-from .add_lapf import add_salary_component_data_for_report
+from .add_salary_component_data import add_salary_component_data_for_report
 
 def add_salary_components_summary(doc, method):
     """
@@ -96,7 +96,7 @@ def add_salary_components_summary(doc, method):
             print("No deductions records found")
         
         print("=== NEW AMOUNTS FROM THIS EMPLOYEE ===")
-        # add_salary_component_data_for_report(doc, new_component_amounts)
+        add_salary_component_data_for_report(doc, new_component_amounts)
 
         if new_component_amounts:
             for comp, amount in new_component_amounts.items():

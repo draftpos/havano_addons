@@ -1,7 +1,7 @@
 import frappe
 from frappe.utils import nowdate, flt
 from frappe import _
-from .add_data_to_report_doctypes import add_lapf_data, add_zibawu_data, add_ufawuz_data, add_cimas_data
+from .add_data_to_report_doctypes import add_lapf_data, add_zibawu_data, add_ufawuz_data, add_cimas_data, add_funeral_policy_data
 
 doc = {'name': 58, 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 0, 'payroll_period': 'July 2025', 'first_name': 'sss', 'surname': 'f', 'doctype': 'Havano Payroll Entry', 'employee_deductions': [{'name': 'nhlkeb5p8g', 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 1, 'components': 'zibawu', 'item_code': None, 'amount_usd': 10.0, 'amount_zwg': 0.0, 'exchange_rate': None, 'is_tax_applicable': 0, 'parent': 58, 'parentfield': 'employee_deductions', 'parenttype': 'Havano Payroll Entry', 'doctype': 'havano_payroll_earnings', '__unsaved': 1}], 'employee_earnings': [{'name': 'nhlg3dk56b', 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 1, 'components': 'Basic Salary', 'item_code': 'BS', 'amount_usd': 300.0, 'amount_zwg': 0.0, 'exchange_rate': None, 'is_tax_applicable': 0, 'parent': 58, 'parentfield': 'employee_earnings', 'parenttype': 'Havano Payroll Entry', 'doctype': 'havano_payroll_earnings', '__unsaved': 1}], '__unsaved': 1}
 
@@ -64,11 +64,6 @@ def add_salary_component_data_for_report(doc, new_component_amounts):
 
         # Extract Basic Salary & LAPF component from earnings
         basic_amount = 0
-        lapf_amount = 0
-        zibawu_amount = 0
-        ufawuz_amount = 0
-        cimas_amount = 0
-        component_deductions = ""
 
         if doc.get("employee_earnings"):
             for row in doc.employee_earnings:
@@ -78,47 +73,49 @@ def add_salary_component_data_for_report(doc, new_component_amounts):
                 if component == "Basic Salary":
                     basic_amount = amount
                     
- 
-        if doc.get("employee_deductions"):
-            for row in doc.employee_deductions:
-                component = row.get("components")
-                amount = flt(row.get("amount_usd", 0))
 
-
-                if component == "LAPF":
-                    lapf_amount = amount
-                    component_deductions = "LAPF"
-                    
-                if component == "zibawu":
-                    zibawu_amount = amount
-                    component_deductions = "zibawu"
-
-                if component == "ufawuz":
-                    ufawuz_amount = amount
-                    component_deductions = "ufawuz"
-
-                elif component == "cimas":
-                    cimas_amount = amount
-                    component_deductions = "cimas"
                 
 
         print("DETAILD WHEN ADD_DATA FUNCTIONS ARE ABOUT TO RUN")
-        print(f"{basic_amount}, == basic amount")
-        print(f"{lapf_amount}, == lapf_amount amount")
-        print(f"{zibawu_amount}, == zibawu_amount amount")
-        print(f"{component_deductions}, == component_deductions amount")
+        print(new_component_amounts)
 
-        print(component_deductions)
-        if component_deductions == "zibawu":
-            add_zibawu_data(doc, basic_amount, zibawu_amount , employee, company)
-        elif component == "LAPF":
-            add_lapf_data(doc, basic_amount, lapf_amount , employee, company)
+        if new_component_amounts:
+            for comp, comp_amount in new_component_amounts.items():
+                print(f"  {comp}: {comp_amount}")
 
-        elif component == "ufawuz":
-            add_ufawuz_data(doc, basic_amount, ufawuz_amount , employee, company)
-        
-        elif component == "cimas":
-            add_cimas_data(doc, basic_amount, cimas_amount , employee, company)
+                if comp.lower() == "zibawu":
+                    add_zibawu_data(doc, basic_amount, comp_amount , employee, company)
+                elif comp.lower() == "lapf":
+                    add_lapf_data(doc, basic_amount, comp_amount , employee, company)
+
+                elif comp.lower() == "ufawuz":
+                    add_ufawuz_data(doc, basic_amount, comp_amount , employee, company)
+                
+                elif comp.lower() == "cimas":
+                    add_cimas_data(doc, basic_amount, comp_amount , employee, company)
+
+                elif comp.lower() == "funeral policy":
+                    add_funeral_policy_data(doc, basic_amount, comp_amount , employee, company)
+
+                elif comp.lower() == "nec":
+                    pass
+
+                elif comp.lower() == "nssa":
+                    pass
+
+                elif comp.lower() == "basic salary":
+                    pass
+
+                elif comp.lower() == "aids levy":
+                    pass
+
+                elif comp.lower() == "payee":
+                    pass
+
+                elif comp.lower() == "payee":
+                    pass
+                    
+                    
 
 
 

@@ -1,0 +1,30 @@
+{
+  "name": "Payroll Summary Report",
+  "report_name": "Payroll Summary Report",
+  "doctype": "Salary Summary On Payroll Run",
+  "is_standard": "Yes",
+  "report_type": "Query Report",
+  "ref_doctype": "Salary Summary On Payroll Run",
+  "module": "Purchase Invoice On Payroll Run",
+  "filters": [
+    {
+      "fieldname": "salary_component",
+      "label": "Salary Component",
+      "fieldtype": "Data",
+      "reqd": 0
+    },
+    {
+      "fieldname": "period",
+      "label": "Period",
+      "fieldtype": "Data",
+      "reqd": 0
+    },
+    {
+      "fieldname": "completed",
+      "label": "Completed",
+      "fieldtype": "Select",
+      "options": ["", "yes", "no"],
+      "reqd": 0
+    }
+  ]
+}

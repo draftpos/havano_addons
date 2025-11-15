@@ -1,14 +1,14 @@
 {
   "doctype": "DocType",
-  "name": "Ufawuz",
-  "module": "ufawuz",
+  "name": "Funeral Policy",
+  "module": "Funeral Policy",
   "is_submittable": 0,
   "istable": 0,
   "quick_entry": 1,
   "track_changes": 1,
   "in_create": 1,
   "show_name_in_global_search": 1,
-  "autoname": "UFW-.YYYY.-.#####",
+  "autoname": "EC-.YYYY.-.#####",
   "fields": [
     {
       "fieldname": "employee_id",
@@ -58,6 +58,13 @@
       "default": 0
     },
     {
+      "fieldname": "amount_employer",
+      "fieldtype": "Currency",
+      "label": "Amount Employer",
+      "reqd": 1,
+      "default": 0
+    },
+    {
       "fieldname": "total_amount",
       "fieldtype": "Currency",
       "label": "Total",
@@ -90,7 +97,8 @@
     {
       "fieldname": "employment_type",
       "fieldtype": "Data",
-      "label": "Employment Type"
+      "label": "Employment Type",
+      "fetch_from": "employee_id.employment_type"
     },
     {
       "fieldname": "section_break_1",
@@ -103,56 +111,56 @@
       "label": "Remarks"
     }
   ],
-
   "owner": "Administrator",
- "permissions": [
+  "permissions": [
     {
-        "role": "All",
-        "permlevel": 0,
-        "read": 1,
-        "write": 1,
-        "create": 1,
-        "delete": 1,
-        "submit": 0,
-        "cancel": 0,
-        "amend": 0,
-        "report": 1,
-        "export": 1,
-        "import": 0,
-        "set_user_permissions": 0,
-        "share": 0,
-        "print": 1,
-        "email": 0
+      "role": "All",
+      "permlevel": 0,
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "submit": 0,
+      "cancel": 0,
+      "amend": 0,
+      "report": 1,
+      "export": 1,
+      "import": 0,
+      "set_user_permissions": 0,
+      "share": 0,
+      "print": 1,
+      "email": 0
     },
     {
-        "role": "System Manager",
-        "permlevel": 0,
-        "read": 1,
-        "write": 1,
-        "create": 1,
-        "delete": 1,
-        "submit": 1,
-        "cancel": 1,
-        "amend": 1,
-        "report": 1,
-        "export": 1,
-        "import": 1,
-        "set_user_permissions": 1,
-        "share": 1,
-        "print": 1,
-        "email": 1
+      "role": "System Manager",
+      "permlevel": 0,
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "submit": 1,
+      "cancel": 1,
+      "amend": 1,
+      "report": 1,
+      "export": 1,
+      "import": 1,
+      "set_user_permissions": 1,
+      "share": 1,
+      "print": 1,
+      "email": 1
     }
-],
+  ],
   "sort_field": "modified",
   "sort_order": "DESC",
   "list_view_settings": {
     "fields": [
       "employee_id",
       "employee_name",
-      "payroll_period", 
+      "payroll_period",
       "date",
       "salary_component",
       "amount_employee",
+      "amount_employer",
       "total_amount",
       "company"
     ],

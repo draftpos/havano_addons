@@ -1,0 +1,185 @@
+{
+  "doctype": "DocType",
+  "name": "Zibawu",
+  "module": "Zibawu",
+  "is_submittable": 0,
+  "istable": 0,
+  "quick_entry": 1,
+  "track_changes": 1,
+  "in_create": 1,
+  "show_name_in_global_search": 1,
+  "autoname": "ZBW-.YYYY.-.#####",
+  "fields": [
+    {
+      "fieldname": "employee_id",
+      "fieldtype": "Link",
+      "label": "Employee ID",
+      "options": "Employee",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "employee_name",
+      "fieldtype": "Data",
+      "label": "Full Name",
+      "fetch_from": "employee_id.employee_name",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "payroll_period",
+      "fieldtype": "Link",
+      "label": "Payroll Period",
+      "options": "Payroll Period",
+      "reqd": 1
+    },
+    {
+      "fieldname": "date",
+      "fieldtype": "Date",
+      "label": "Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "salary_component",
+      "fieldtype": "Link",
+      "label": "Component",
+      "options": "Salary Component",
+      "reqd": 1
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "reqd": 1,
+      "default": "USD"
+    },
+    {
+      "fieldname": "amount_employee",
+      "fieldtype": "Currency",
+      "label": "Amount Employee",
+      "reqd": 1,
+      "default": 0
+    },
+    {
+      "fieldname": "total_amount",
+      "fieldtype": "Currency",
+      "label": "Total",
+      "read_only": 1,
+      "reqd": 1,
+      "default": 0
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "reqd": 1,
+      "fetch_from": "employee_id.company"
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Link",
+      "label": "Department",
+      "options": "Department",
+      "fetch_from": "employee_id.department"
+    },
+    {
+      "fieldname": "designation",
+      "fieldtype": "Link",
+      "label": "Designation",
+      "options": "Designation",
+      "fetch_from": "employee_id.designation"
+    },
+    {
+      "fieldname": "employment_type",
+      "fieldtype": "Link",
+      "label": "Employment Type",
+      "options": "Employment Type",
+      "fetch_from": "employee_id.employment_type"
+    },
+    {
+      "fieldname": "section_break_1",
+      "fieldtype": "Section Break",
+      "label": "Additional Details"
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "links": [
+    {
+      "link_doctype": "Employee",
+      "link_fieldname": "employee_id"
+    },
+    {
+      "link_doctype": "Payroll Entry",
+      "link_fieldname": "payroll_period"
+    }
+  ],
+  "owner": "Administrator",
+"permissions": [
+    {
+        "role": "All",
+        "permlevel": 0,
+        "read": 1,
+        "write": 1,
+        "create": 1,
+        "delete": 1,
+        "submit": 0,
+        "cancel": 0,
+        "amend": 0,
+        "report": 1,
+        "export": 1,
+        "import": 0,
+        "set_user_permissions": 0,
+        "share": 0,
+        "print": 1,
+        "email": 0
+    },
+    {
+        "role": "System Manager",
+        "permlevel": 0,
+        "read": 1,
+        "write": 1,
+        "create": 1,
+        "delete": 1,
+        "submit": 1,
+        "cancel": 1,
+        "amend": 1,
+        "report": 1,
+        "export": 1,
+        "import": 1,
+        "set_user_permissions": 1,
+        "share": 1,
+        "print": 1,
+        "email": 1
+    }
+],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "list_view_settings": {
+    "fields": [
+      "employee_id",
+      "employee_name",
+      "payroll_period", 
+      "date",
+      "salary_component",
+      "amount_employee",
+      "total_amount",
+      "company"
+    ],
+    "order_by": "date DESC",
+    "add_total_row": 1,
+    "filters": [
+      ["date", "Date", "Date"],
+      ["payroll_period", "Link", "Payroll Period"],
+      ["employee_id", "Link", "Employee"],
+      ["company", "Link", "Company"],
+      ["department", "Link", "Department"],
+      ["salary_component", "Link", "Salary Component"]
+    ]
+  }
+}

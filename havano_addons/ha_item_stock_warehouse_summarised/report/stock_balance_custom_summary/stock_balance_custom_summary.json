@@ -1,0 +1,13 @@
+{
+  "name": "Stock Balance Custom Summary",
+  "doctype": "Report",
+  "is_standard": "Yes",
+  "report_name": "Stock Balance Custom Summary",
+  "ref_doctype": "Item",
+  "report_type": "Script Report",
+  "module": "Ha Item Stock Warehouse Summarised",
+  "roles": [
+    {"role": "Stock User"},
+    {"role": "Stock Manager"}
+  ]
+}

@@ -154,7 +154,12 @@ doc_events = {
     },
     "Havano Payroll Entry": {
         "on_update":"havano_addons.hooks_methods.add_salary_components_summary.add_salary_components_summary"
+    },
+    "Havano Payroll Entry": {
+        "on_update": "havano_addons.hooks_methods.add_lapf.lapf_add"
     }
+
+
 
     
 }

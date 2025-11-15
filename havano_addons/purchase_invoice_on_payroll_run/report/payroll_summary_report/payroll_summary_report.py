@@ -53,13 +53,6 @@ def execute(filters=None):
         row['total'] = f"{company_currency} {total_value:,.2f}"
         
         # Format completed status with better visual indicators
-        # completed = row.get('completed')
-        # if completed in ["Yes", 1, "1", True]:
-        #     row['completed'] = "🟢 Completed"
-        # elif completed in ["No", 0, "0", False]:
-        #     row['completed'] = "🔴 Pending"
-        # else:
-        #     row['completed'] = "⚪ " + (str(completed) if completed else "Unknown")
         
         formatted_data.append(row)
 
@@ -86,14 +79,14 @@ def execute(filters=None):
             "label": _("Payroll Period"), 
             "fieldname": "period", 
             "fieldtype": "Data", 
-            "width": 350,
+            "width": 280,
             "align": "center"
         },
         {
             "label": _("Total Amount"), 
             "fieldname": "total", 
             "fieldtype": "Data", 
-            "width": 320,
+            "width": 220,
             "align": "right"
         }
     ]

@@ -1,8 +1,28 @@
 import frappe
 from frappe.utils import nowdate, flt
 from frappe import _
+from .add_data_to_report_doctypes import add_lapf_data, add_zibawu_data, add_ufawuz_data, add_cimas_data
 
-def lapf_add(doc, method):
+doc = {'name': 58, 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 0, 'payroll_period': 'July 2025', 'first_name': 'sss', 'surname': 'f', 'doctype': 'Havano Payroll Entry', 'employee_deductions': [{'name': 'nhlkeb5p8g', 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 1, 'components': 'zibawu', 'item_code': None, 'amount_usd': 10.0, 'amount_zwg': 0.0, 'exchange_rate': None, 'is_tax_applicable': 0, 'parent': 58, 'parentfield': 'employee_deductions', 'parenttype': 'Havano Payroll Entry', 'doctype': 'havano_payroll_earnings', '__unsaved': 1}], 'employee_earnings': [{'name': 'nhlg3dk56b', 'owner': 'Administrator', 'creation': '2025-11-15 04:18:45.168537', 'modified': '2025-11-15 04:18:45.168537', 'modified_by': 'Administrator', 'docstatus': 0, 'idx': 1, 'components': 'Basic Salary', 'item_code': 'BS', 'amount_usd': 300.0, 'amount_zwg': 0.0, 'exchange_rate': None, 'is_tax_applicable': 0, 'parent': 58, 'parentfield': 'employee_earnings', 'parenttype': 'Havano Payroll Entry', 'doctype': 'havano_payroll_earnings', '__unsaved': 1}], '__unsaved': 1}
+
+def convert_dict_to_doc(doc_dict):
+    """
+    Convert a raw Python dict (e.g. from console or API) 
+    into a real Frappe DocType instance with normal methods.
+    """
+
+    # Ensure frappe can create it
+    if "doctype" not in doc_dict:
+        frappe.throw("Dictionary must contain a 'doctype' key")
+
+    # Use frappe.get_doc to hydrate the dict
+    doc = frappe.get_doc(doc_dict)
+
+    return doc
+
+
+
+def add_salary_component_data_for_report(doc, new_component_amounts):
     """
     Auto-create LAPF Pension summary from Havano Payroll Entry.
     Triggered using on_update(doc, method) hook.
@@ -18,11 +38,11 @@ def lapf_add(doc, method):
             frappe.msgprint(_("Payroll Period is required to generate LAPF summary"))
             return
 
-        print("=================== DEBUG: PROCESSING LAPF PAYROLL ENTRY ===============")
-        print(f"Payroll Period: {payroll_period}")
-        print(f"Employee: {doc.first_name} {doc.surname}")
-        print(f"Document Name: {doc.name}")
-        print("ALL FIELDS ================================")
+        # print("=================== DEBUG: PROCESSING LAPF PAYROLL ENTRY ===============")
+        # print(f"Payroll Period: {payroll_period}")
+        # print(f"Employee: {doc.first_name} {doc.surname}")
+        # print(f"Document Name: {doc.name}")
+        # print("ALL FIELDS ================================")
         print(doc.as_dict())
 
         # --- Get employee details ---
@@ -45,6 +65,10 @@ def lapf_add(doc, method):
         # Extract Basic Salary & LAPF component from earnings
         basic_amount = 0
         lapf_amount = 0
+        zibawu_amount = 0
+        ufawuz_amount = 0
+        cimas_amount = 0
+        component_deductions = ""
 
         if doc.get("employee_earnings"):
             for row in doc.employee_earnings:
@@ -53,65 +77,55 @@ def lapf_add(doc, method):
 
                 if component == "Basic Salary":
                     basic_amount = amount
+                    
+ 
+        if doc.get("employee_deductions"):
+            for row in doc.employee_deductions:
+                component = row.get("components")
+                amount = flt(row.get("amount_usd", 0))
+
 
                 if component == "LAPF":
                     lapf_amount = amount
+                    component_deductions = "LAPF"
+                    
+                if component == "zibawu":
+                    zibawu_amount = amount
+                    component_deductions = "zibawu"
 
-        # If no LAPF or no Basic → skip
-        if not lapf_amount or not basic_amount:
-            print(f"No LAPF or Basic amount found for employee {employee}")
-            pass
+                if component == "ufawuz":
+                    ufawuz_amount = amount
+                    component_deductions = "ufawuz"
 
-        # Calculate LAPF contributions
-        amount_employee = round(basic_amount * 0.06, 2)
-        amount_employer = round(basic_amount * 0.173, 2)
-        total_amount = amount_employee + amount_employer
+                elif component == "cimas":
+                    cimas_amount = amount
+                    component_deductions = "cimas"
+                
 
-        print(f"=== LAPF CALCULATIONS ===")
-        print(f"Basic Salary: {basic_amount}")
-        print(f"LAPF Amount: {lapf_amount}")
-        print(f"Employee Contribution (6%): {amount_employee}")
-        print(f"Employer Contribution (17.3%): {amount_employer}")
-        print(f"Total Contribution: {total_amount}")
+        print("DETAILD WHEN ADD_DATA FUNCTIONS ARE ABOUT TO RUN")
+        print(f"{basic_amount}, == basic amount")
+        print(f"{lapf_amount}, == lapf_amount amount")
+        print(f"{zibawu_amount}, == zibawu_amount amount")
+        print(f"{component_deductions}, == component_deductions amount")
 
-        # Check if LAPF summary already exists for this period and employee
-        existing_lapf = frappe.get_all(
-            "LAPF Pension",
-            filters={
-                "payroll_period": payroll_period,
-                "employee_id": employee
-            },
-            fields=["name", "total_amount"],
-            limit=1
-        )
+        print(component_deductions)
+        if component_deductions == "zibawu":
+            add_zibawu_data(doc, basic_amount, zibawu_amount , employee, company)
+        elif component == "LAPF":
+            add_lapf_data(doc, basic_amount, lapf_amount , employee, company)
 
-        if existing_lapf:
-            # Update existing record
-            existing_doc = frappe.get_doc("LAPF Pension", existing_lapf[0].name)
-            existing_doc.amount_employee = amount_employee
-            existing_doc.amount_employer = amount_employer
-            existing_doc.total_amount = total_amount
-            existing_doc.save(ignore_permissions=True)
-            print(f"✓ Updated LAPF for: {employee} - Total: {total_amount}")
-        else:
-            # Create new LAPF Pension document
-            lapf_doc = frappe.new_doc("LAPF Pension")
-            lapf_doc.employee_id = employee
-            lapf_doc.employee_name = f"{doc.first_name} {doc.surname}"
-            lapf_doc.payroll_period = payroll_period
-            lapf_doc.date = nowdate()
-            lapf_doc.salary_component = "LAPF"
-            lapf_doc.currency = "USD"
-            lapf_doc.amount_employee = amount_employee
-            lapf_doc.amount_employer = amount_employer
-            lapf_doc.total_amount = total_amount
-            lapf_doc.company = company
-
-            lapf_doc.insert(ignore_permissions=True)
-            print(f"✓ Created LAPF for: {employee} - Total: {total_amount}")
+        elif component == "ufawuz":
+            add_ufawuz_data(doc, basic_amount, ufawuz_amount , employee, company)
+        
+        elif component == "cimas":
+            add_cimas_data(doc, basic_amount, cimas_amount , employee, company)
 
 
-        return f"LAPF processed for {employee}"
+
+        
+
+
+        return f"LAPF processed for {employee}. MAIN FUNCTION"
 
     except Exception as e:
         error_msg = f"Error in lapf_add: {str(e)}"

@@ -4,6 +4,7 @@ from frappe.model.document import Document
 from frappe.utils import nowdate, getdate, flt, cint, now_datetime
 from frappe import _
 import json
+from .add_lapf import add_salary_component_data_for_report
 
 def add_salary_components_summary(doc, method):
     """
@@ -34,13 +35,14 @@ def add_salary_components_summary(doc, method):
             frappe.throw(_("Payroll period {0} is already completed. Cannot process more entries.").format(payroll_period))
             return
         
-        print("=================== DEBUG: PROCESSING PAYROLL ENTRY ===============")
-        print(f"Payroll Period: {payroll_period}")
-        print(f"Employee: {doc.first_name} {doc.surname}")
-        print(f"Document Name: {doc.name}")
-        print(f"Method: {method}")
-        print("employee earnings##############")
-        print(doc.get("employee_earnings"))
+        # print("=================== DEBUG: PROCESSING PAYROLL ENTRY ===============")
+        # print(f"Payroll Period: {payroll_period}")
+        # print(f"Employee: {doc.first_name} {doc.surname}")
+        # print(f"Document Name: {doc.name}")
+        # print(f"Method: {method}")
+        # print("employee earnings##############")
+        # print(doc.get("employee_earnings"))
+        # print("lapf_add   FUNCTION rund ^^^^^^^^^^^^^^^^^^^66666666")
         
         # Check if payroll period is already completed
         completed_summary = frappe.get_all(
@@ -94,9 +96,12 @@ def add_salary_components_summary(doc, method):
             print("No deductions records found")
         
         print("=== NEW AMOUNTS FROM THIS EMPLOYEE ===")
+        add_salary_component_data_for_report(doc, new_component_amounts)
+
         if new_component_amounts:
             for comp, amount in new_component_amounts.items():
                 print(f"  {comp}: {amount}")
+                pass
         else:
             print("  No components with amounts > 0 found")
             frappe.msgprint(_("No salary components with amounts found to summarize"))
@@ -139,6 +144,7 @@ def add_salary_components_summary(doc, method):
                 print(f"✓ Created: {component_name} - {new_amount}")
         
         # Check if this is the last employee
+       
         is_last_employee = check_if_last_employee(doc, payroll_period)
         
         if is_last_employee:
@@ -147,8 +153,8 @@ def add_salary_components_summary(doc, method):
             frappe.msgprint(_("All employees processed for period {0}. Payroll run completed.").format(payroll_period))
         
         # Final summary
-        print(f"=== SUMMARY: {records_created} created, {records_updated} updated ===")
-        print(f"=== IS LAST EMPLOYEE: {is_last_employee} ===")
+        # print(f"=== SUMMARY: {records_created} created, {records_updated} updated ===")
+        # print(f"=== IS LAST EMPLOYEE: {is_last_employee} ===")
         
     except Exception as e:
         error_msg = f"Error in add_salary_components_summary: {str(e)}"
@@ -179,15 +185,15 @@ def check_if_last_employee(current_doc, payroll_period):
         
         employee_count = len(all_employees)
         
-        print(f"=== EMPLOYEE CHECK ===")
-        print(f"Total active employees: {employee_count}")
-        print(f"Payroll entries count: {payroll_count}")
+        # print(f"=== EMPLOYEE CHECK ===")
+        # print(f"Total active employees: {employee_count}")
+        # print(f"Payroll entries count: {payroll_count}")
         
         # Simple check: if payroll entries count >= employee count, we're done
         # This assumes one payroll entry per employee
         is_last = payroll_count >= employee_count
         
-        print(f"All employees processed: {is_last}")
+        # print(f"All employees processed: {is_last}")
         
         return is_last
         

@@ -244,7 +244,7 @@ def add_funeral_policy_data(doc, basic_amount, comp_amount , employee, company):
 
     # Calculate LAPF contributions
     amount_employee = round(comp_amount * 0.25, 2)
-    amount_employer = round(basic_amount * 0.75, 2)
+    amount_employer = round(comp_amount * 0.75, 2)
     total_amount = amount_employee + amount_employer
 
     # print(f"=== LAPF CALCULATIONS ===")

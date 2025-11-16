@@ -45,6 +45,29 @@ def add_salary_components_summary(doc, method):
         # print("lapf_add   FUNCTION rund ^^^^^^^^^^^^^^^^^^^66666666")
         
         # Check if payroll period is already completed
+        
+        havano_employee = frappe.get_value(
+                "havano_employee",
+                {
+                    "first_name": doc.first_name,
+                    "last_name": doc.surname
+                },
+                "name"
+            )
+
+        if havano_employee:
+            emp_doc = frappe.get_doc("havano_employee", havano_employee)
+            # Now you have the full document
+            print("EMPLOYEE FROM HAVANO EMPLOYEE------------------------------")
+            print(emp_doc)
+            print(havano_employee)
+            print(f"Payee: {emp_doc.payee}")
+            print(f"aids_levy : {emp_doc.aids_levy}")
+            # print(emp_doc.as_dict())
+
+    
+
+
         completed_summary = frappe.get_all(
             "Salary Summary On Payroll Run",
             filters={
@@ -96,11 +119,21 @@ def add_salary_components_summary(doc, method):
             print("No deductions records found")
         
         print("=== NEW AMOUNTS FROM THIS EMPLOYEE ===")
-        add_salary_component_data_for_report(doc, new_component_amounts)
+        print(f"ALL COMPONENTS {new_component_amounts}")
+
+        # MODIFY COMPONENTS TO HAVE CALCULATED DETAILS
+
+        new_component_amounts['PAYEE'] = emp_doc.payee
+        new_component_amounts['Aids Levy'] = emp_doc.aids_levy
+        
+        try:
+            add_salary_component_data_for_report(doc, new_component_amounts)
+        except Exception as e:
+            print(e)
 
         if new_component_amounts:
-            for comp, amount in new_component_amounts.items():
-                print(f"  {comp}: {amount}")
+            # for comp, amount in new_component_amounts.items():
+            #     print(f"  {comp}: {amount}")
                 pass
         else:
             print("  No components with amounts > 0 found")

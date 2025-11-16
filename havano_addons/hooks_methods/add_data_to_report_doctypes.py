@@ -15,12 +15,12 @@ def add_lapf_data(doc, basic_amount, lapf_amount , employee, company):
     amount_employer = round(basic_amount * 0.173, 2)
     total_amount = amount_employee + amount_employer
 
-    print(f"=== LAPF CALCULATIONS ===")
-    print(f"Basic Salary: {basic_amount}")
-    print(f"LAPF Amount: {lapf_amount}")
-    print(f"Employee Contribution (6%): {amount_employee}")
-    print(f"Employer Contribution (17.3%): {amount_employer}")
-    print(f"Total Contribution: {total_amount}")
+    # print(f"=== LAPF CALCULATIONS ===")
+    # print(f"Basic Salary: {basic_amount}")
+    # print(f"LAPF Amount: {lapf_amount}")
+    # print(f"Employee Contribution (6%): {amount_employee}")
+    # print(f"Employer Contribution (17.3%): {amount_employer}")
+    # print(f"Total Contribution: {total_amount}")
 
     # Check if LAPF summary already exists for this period and employee
     existing_lapf = frappe.get_all(
@@ -75,12 +75,12 @@ def add_zibawu_data(doc, basic_amount, zibawu_amount , employee, company):
     amount_employer =  0
     total_amount = amount_employee + amount_employer
 
-    print(f"=== LAPF CALCULATIONS ===")
-    print(f"Basic Salary: {basic_amount}")
-    print(f"Zibawu Amount: {zibawu_amount}")
-    print(f"Employee Contribution (2%): {amount_employee}")
-    print(f"Employer Contribution 0: {amount_employer}")
-    print(f"Total Contribution: {total_amount}")
+    # print(f"=== LAPF CALCULATIONS ===")
+    # print(f"Basic Salary: {basic_amount}")
+    # print(f"Zibawu Amount: {zibawu_amount}")
+    # print(f"Employee Contribution (2%): {amount_employee}")
+    # print(f"Employer Contribution 0: {amount_employer}")
+    # print(f"Total Contribution: {total_amount}")
 
     # Check if LAPF summary already exists for this period and employee
     existing_zibawu = frappe.get_all(
@@ -133,12 +133,12 @@ def add_ufawuz_data(doc, basic_amount, ufawuz_amount , employee, company):
     amount_employer = 0
     total_amount = amount_employee + amount_employer
 
-    print(f"=== LAPF CALCULATIONS ===")
-    print(f"Basic Salary: {basic_amount}")
-    print(f"Zibawu Amount: {ufawuz_amount}")
-    print(f"Employee Contribution (6%): {amount_employee}")
-    print(f"Employer Contribution (17.3%): {amount_employer}")
-    print(f"Total Contribution: {total_amount}")
+    # print(f"=== LAPF CALCULATIONS ===")
+    # print(f"Basic Salary: {basic_amount}")
+    # print(f"Zibawu Amount: {ufawuz_amount}")
+    # print(f"Employee Contribution (6%): {amount_employee}")
+    # print(f"Employer Contribution (17.3%): {amount_employer}")
+    # print(f"Total Contribution: {total_amount}")
 
     # Check if LAPF summary already exists for this period and employee
     existing_ufawuz = frappe.get_all(
@@ -190,12 +190,12 @@ def add_cimas_data(doc, basic_amount, cimas_amount , employee, company):
     amount_employer = round(cimas_amount * 0.75, 2)
     total_amount = amount_employee + amount_employer
 
-    print(f"=== LAPF CALCULATIONS ===")
-    print(f"Basic Salary: {basic_amount}")
-    print(f"Zibawu Amount: {cimas_amount}")
-    print(f"Employee Contribution (6%): {amount_employee}")
-    print(f"Employer Contribution (17.3%): {amount_employer}")
-    print(f"Total Contribution: {total_amount}")
+    # print(f"=== LAPF CALCULATIONS ===")
+    # print(f"Basic Salary: {basic_amount}")
+    # print(f"Zibawu Amount: {cimas_amount}")
+    # print(f"Employee Contribution (6%): {amount_employee}")
+    # print(f"Employer Contribution (17.3%): {amount_employer}")
+    # print(f"Total Contribution: {total_amount}")
 
     # Check if LAPF summary already exists for this period and employee
     existing_cimas = frappe.get_all(
@@ -247,12 +247,12 @@ def add_funeral_policy_data(doc, basic_amount, comp_amount , employee, company):
     amount_employer = round(basic_amount * 0.75, 2)
     total_amount = amount_employee + amount_employer
 
-    print(f"=== LAPF CALCULATIONS ===")
-    print(f"Basic Salary: {basic_amount}")
-    print(f"Policy Amount: {comp_amount}")
-    print(f"Employee Contribution (6%): {amount_employee}")
-    print(f"Employer Contribution (17.3%): {amount_employer}")
-    print(f"Total Contribution: {total_amount}")
+    # print(f"=== LAPF CALCULATIONS ===")
+    # print(f"Basic Salary: {basic_amount}")
+    # print(f"Policy Amount: {comp_amount}")
+    # print(f"Employee Contribution (6%): {amount_employee}")
+    # print(f"Employer Contribution (17.3%): {amount_employer}")
+    # print(f"Total Contribution: {total_amount}")
 
     # Check if LAPF summary already exists for this period and employee
     existing_policy = frappe.get_all(

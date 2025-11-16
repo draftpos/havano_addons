@@ -43,7 +43,7 @@ def add_salary_component_data_for_report(doc, new_component_amounts):
         # print(f"Employee: {doc.first_name} {doc.surname}")
         # print(f"Document Name: {doc.name}")
         # print("ALL FIELDS ================================")
-        print(doc.as_dict())
+        # print(doc.as_dict())
 
         # --- Get employee details ---
         employee = frappe.db.get_value(

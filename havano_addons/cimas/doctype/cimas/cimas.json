@@ -58,6 +58,13 @@
       "default": 0
     },
     {
+      "fieldname": "amount_employer",
+      "fieldtype": "Currency",
+      "label": "Amount Employer",
+      "reqd": 1,
+      "default": 0
+    },
+    {
       "fieldname": "total_amount",
       "fieldtype": "Currency",
       "label": "Total",

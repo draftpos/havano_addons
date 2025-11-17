@@ -6,6 +6,7 @@
   "ref_doctype": "Zibawu",
   "report_type": "Script Report",
   "module": "Zibawu",
+  "allow_print": 1,
   "roles": [
     {"role": "All"},
     {"role": "System Manager"}

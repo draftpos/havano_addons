@@ -6,6 +6,7 @@
   "ref_doctype": "Funeral Policy",
   "report_type": "Script Report",
   "module": "Funeral Policy",
+  "allow_print": 1,
   "roles": [
     {"role": "All"},
     {"role": "System Manager"}

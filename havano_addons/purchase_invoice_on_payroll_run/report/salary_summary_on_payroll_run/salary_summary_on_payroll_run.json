@@ -1,0 +1,45 @@
+{
+    "add_total_row": 1,
+    "columns": [],
+    "creation": "2025-11-17",
+    "doctype": "Report",
+    "filters": [
+        {
+            "fieldname": "salary_component",
+            "fieldtype": "Data",
+            "label": "Salary Component",
+            "wildcard_filter": 1
+        },
+        {
+            "fieldname": "period",
+            "fieldtype": "Data",
+            "label": "Period",
+            "wildcard_filter": 1
+        },
+        {
+            "fieldname": "completed",
+            "fieldtype": "Select",
+            "label": "Status",
+            "options": "\nYes\nNo"
+        },
+        {
+            "fieldname": "from_date",
+            "fieldtype": "Date",
+            "label": "From Date"
+        },
+        {
+            "fieldname": "to_date",
+            "fieldtype": "Date",
+            "label": "To Date"
+        }
+    ],
+    "is_standard": "Yes",
+    "modified": "2025-11-17",
+    "modified_by": "Administrator",
+    "module": "Purchase Invoice On Payroll Run",
+    "name": "Salary Summary On Payroll Run",
+    "owner": "Administrator",
+    "ref_doctype": "Salary Summary On Payroll Run",
+    "report_name": "Salary Summary On Payroll Run",
+    "report_type": "Script Report"
+}

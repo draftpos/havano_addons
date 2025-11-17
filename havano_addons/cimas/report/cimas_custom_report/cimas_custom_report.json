@@ -1,13 +1,32 @@
 {
-  "name": "Cimas Custom Report",
-  "doctype": "Report",
-  "is_standard": "Yes",
-  "report_name": "Cimas Custom Report",
-  "ref_doctype": "Cimas",
-  "report_type": "Script Report",
-  "module": "Cimas",
-  "roles": [
-    {"role": "All"},
-    {"role": "System Manager"}
-  ]
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-11-17 10:55:17.453410",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2025-11-17 11:00:41.822557",
+ "modified_by": "Administrator",
+ "module": "Cimas",
+ "name": "Cimas Custom Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Cimas",
+ "report_name": "Cimas Custom Report",
+ "report_type": "Script Report",
+ "allow_print": 1,
+ "roles": [
+  {
+   "role": "All"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "timeout": 0
 }

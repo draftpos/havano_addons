@@ -6,6 +6,7 @@
   "ref_doctype": "Ufawuz",
   "report_type": "Script Report",
   "module": "ufawuz",
+  "allow_print": 1,
   "roles": [
     {"role": "All"},
     {"role": "System Manager"}

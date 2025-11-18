@@ -10,13 +10,12 @@ from frappe import _  # For frappe.throw
 
 Exmaple
 
-GET http://localhost:8000/api/method/saas_api.www.api.user_stock_report?user=wisdom@example.com
+GET http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline
 
 Response
 
 {
     "message": {
-        "user": "wisdom@example.com",
         "company": "Showline",
         "columns": [
             {
@@ -118,27 +117,18 @@ Response
 
 
 @frappe.whitelist(allow_guest=True)
-def user_stock_report(user=None):
+def user_stock_report(company=None):
     """
     Returns stock report for the given user - automatically determines company from user
     """
-    if not user:
-        frappe.throw("User email is required")
-    
-    # Validate user email format
-    if "@" not in user or "." not in user:
-        frappe.throw("Please provide a valid email address")
-
-    # Try multiple ways to find the employee
-    employee = find_employee_by_email(user)
-    
-    if not employee:
-        frappe.throw(f"No employee found for email {user}")
-    
-    company = employee.company
-    
     if not company:
-        frappe.throw(f"Employee {employee.name} does not belong to any company")
+        frappe.throw("company is required")
+
+    
+    company = frappe.db.get_value("Company", company, "name")
+
+
+    
 
     # Get stock data for the company
     filters = {"company": company}
@@ -149,7 +139,6 @@ def user_stock_report(user=None):
         data = add_totals_row(data)
 
     return {
-        "user": user,
         "company": company,
         "columns": columns, 
         "data": data
@@ -160,24 +149,24 @@ def find_employee_by_email(email):
     Try multiple ways to find employee by email
     """
     # Method 1: Check user_id field (system user)
-    employee = frappe.db.get_value("Employee", {"user_id": email}, ["name", "company", "user_id"], as_dict=True)
+    employee = frappe.db.get_value("User", {"user_id": email}, ["name", "company", "user_id"], as_dict=True)
     if employee:
         return employee
     
     # Method 2: Check personal_email field
-    employee = frappe.db.get_value("Employee", {"personal_email": email}, ["name", "company", "user_id"], as_dict=True)
+    employee = frappe.db.get_value("User", {"personal_email": email}, ["name", "company", "user_id"], as_dict=True)
     if employee:
         return employee
     
     # Method 3: Check company_email field
-    employee = frappe.db.get_value("Employee", {"company_email": email}, ["name", "company", "user_id"], as_dict=True)
+    employee = frappe.db.get_value("User", {"company_email": email}, ["name", "company", "user_id"], as_dict=True)
     if employee:
         return employee
     
     # Method 4: Check preferred_email field
-    employee = frappe.db.get_value("Employee", {"preferred_email": email}, ["name", "company", "user_id"], as_dict=True)
-    if employee:
-        return employee
+    # employee = frappe.db.get_value("havano_employee", {"preferred_email": email}, ["name", "company", "user_id"], as_dict=True)
+    # if employee:
+    #     return employee
     
     return None
 

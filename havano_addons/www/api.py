@@ -22,6 +22,11 @@ GET http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?com
 or 
 http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline&from_date=2025-01-01&to_date=2025-12-31
 
+live
+
+http://buz.havano.cloud/api/method/havano_addons.www.api.user_stock_report?company=Showline &from_date=2025-01-01&to_date=2025-12-31
+http://buz.havano.cloud/api/method/havano_addons.www.api.user_stock_report?company=Showline &from_date=2025-01-01&to_date=2025-12-31
+
 with filters
 
 Response

@@ -7,10 +7,22 @@ from frappe import _  # For frappe.throw
 
 # user_stock_report --------------------------------------------------------------
 """ Return stock report for user based on the company that they belong to 
+filter dates example 
+{
+  "from_date": "2025-01-01",
+  "to_date": "2025-01-31",
+  "company" : company
+}
+
 
 Exmaple
 
 GET http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline
+
+or 
+http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline&from_date=2025-01-01&to_date=2025-12-31
+
+with filters
 
 Response
 
@@ -117,7 +129,7 @@ Response
 
 
 @frappe.whitelist(allow_guest=True)
-def user_stock_report(company=None):
+def user_stock_report(company=None, from_date = None, to_date=None ):
     """
     Returns stock report for the given user - automatically determines company from user
     """
@@ -126,12 +138,16 @@ def user_stock_report(company=None):
 
     
     company = frappe.db.get_value("Company", company, "name")
+    filters = {
+    "from_date": from_date,
+    "to_date": to_date,
+    "company": company
+    }
 
 
     
 
     # Get stock data for the company
-    filters = {"company": company}
     columns = get_columns()
     data = get_data(filters, company)
     
@@ -182,8 +198,20 @@ def get_columns():
 
 def get_data(filters, company):
     # Filter stock ledger entries by company via warehouse
-    sle_entries = frappe.db.sql(
-        """
+    conditions = ""
+    values = {"company": company}
+
+    # Apply from_date only if provided
+    if filters.get("from_date"):
+        conditions += " AND sle.posting_date >= %(from_date)s"
+        values["from_date"] = filters["from_date"]
+
+    # Apply to_date only if provided
+    if filters.get("to_date"):
+        conditions += " AND sle.posting_date <= %(to_date)s"
+        values["to_date"] = filters["to_date"]
+
+    query = f"""
         SELECT
             sle.item_code,
             sle.warehouse,
@@ -194,12 +222,13 @@ def get_data(filters, company):
           AND sle.warehouse IN (
               SELECT name FROM `tabWarehouse` WHERE company = %(company)s
           )
+          {conditions}
         GROUP BY sle.item_code, sle.warehouse
         HAVING SUM(sle.actual_qty) != 0
-        """,
-        {"company": company},
-        as_dict=True
-    )
+    """
+
+
+    sle_entries = frappe.db.sql(query, values, as_dict=True)
 
     data = []
 

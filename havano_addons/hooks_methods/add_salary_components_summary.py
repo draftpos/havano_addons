@@ -7,6 +7,7 @@ import json
 from .add_salary_component_data import add_salary_component_data_for_report
 
 def add_salary_components_summary(doc, method):
+    print(f"=================== add_salary_components_summary REACHED nowwww ========={doc}==========")
     """
     Add salary components summary when Havano Payroll Entry is saved
     This accumulates totals across ALL employees for the same payroll period
@@ -34,17 +35,7 @@ def add_salary_components_summary(doc, method):
         if completed_summary:
             frappe.throw(_("Payroll period {0} is already completed. Cannot process more entries.").format(payroll_period))
             return
-        
-        # print("=================== DEBUG: PROCESSING PAYROLL ENTRY ===============")
-        # print(f"Payroll Period: {payroll_period}")
-        # print(f"Employee: {doc.first_name} {doc.surname}")
-        # print(f"Document Name: {doc.name}")
-        # print(f"Method: {method}")
-        # print("employee earnings##############")
-        # print(doc.get("employee_earnings"))
-        # print("lapf_add   FUNCTION rund ^^^^^^^^^^^^^^^^^^^66666666")
-        
-        # Check if payroll period is already completed
+
         
         havano_employee = frappe.get_value(
                 "havano_employee",
@@ -54,7 +45,7 @@ def add_salary_components_summary(doc, method):
                 },
                 "name"
             )
-
+        total_net_salary=0
         if havano_employee:
             emp_doc = frappe.get_doc("havano_employee", havano_employee)
             # Now you have the full document
@@ -64,8 +55,6 @@ def add_salary_components_summary(doc, method):
             print(f"Payee: {emp_doc.payee}")
             print(f"aids_levy : {emp_doc.aids_levy}")
             # print(emp_doc.as_dict())
-
-    
 
 
         completed_summary = frappe.get_all(
@@ -86,14 +75,10 @@ def add_salary_components_summary(doc, method):
         
         # Process earnings
         if doc.get("employee_earnings"):
-            print(f"Found {len(doc.employee_earnings)} earnings records")
             for i, earning in enumerate(doc.employee_earnings):
                 component_name = earning.get("components")
                 amount_usd = flt(earning.get("amount_usd", 0))
                 total_amount = amount_usd
-                
-                print(f"Earning {i}: {component_name} - USD: {amount_usd}, Total: {total_amount}")
-                
                 if component_name and total_amount > 0:
                     if component_name not in new_component_amounts:
                         new_component_amounts[component_name] = 0
@@ -103,7 +88,6 @@ def add_salary_components_summary(doc, method):
         
         # Process deductions
         if doc.get("employee_deductions"):
-            print(f"Found {len(doc.employee_deductions)} deductions records")
             for i, deduction in enumerate(doc.employee_deductions):
                 component_name = deduction.get("components")
                 amount_usd = flt(deduction.get("amount_usd", 0))
@@ -117,9 +101,6 @@ def add_salary_components_summary(doc, method):
                     new_component_amounts[component_name] += total_amount
         else:
             print("No deductions records found")
-        
-        print("=== NEW AMOUNTS FROM THIS EMPLOYEE ===")
-        print(f"ALL COMPONENTS {new_component_amounts}")
 
         # MODIFY COMPONENTS TO HAVE CALCULATED DETAILS
 
@@ -136,7 +117,6 @@ def add_salary_components_summary(doc, method):
             #     print(f"  {comp}: {amount}")
                 pass
         else:
-            print("  No components with amounts > 0 found")
             frappe.msgprint(_("No salary components with amounts found to summarize"))
             return
         
@@ -164,7 +144,6 @@ def add_salary_components_summary(doc, method):
                 existing_doc.total = new_amount + existing_total
                 existing_doc.save(ignore_permissions=True)
                 records_updated += 1
-                print(f"✓ Updated: {component_name} - Added {new_amount}")
             else:
                 # Create new record (first employee for this component in this period)
                 summary_doc = frappe.new_doc("Salary Summary On Payroll Run")
@@ -174,7 +153,6 @@ def add_salary_components_summary(doc, method):
                 summary_doc.completed = "no"  # Default to not completed
                 summary_doc.insert(ignore_permissions=True)
                 records_created += 1
-                print(f"✓ Created: {component_name} - {new_amount}")
         
         # Check if this is the last employee
        
@@ -196,12 +174,10 @@ def add_salary_components_summary(doc, method):
         frappe.throw(_("Failed to update salary components summary: {0}").format(str(e)))
 
 def check_if_last_employee(current_doc, payroll_period):
-    print("is last employeeee run ===================================&&&&&&&")
     """
     Check if all employees for this company have been processed for this payroll period
     """
     try:
-        print("is last employee try ruun &&&&&&&&&&&&")
         # Get company from current document
 
         
@@ -251,9 +227,7 @@ def mark_period_completed(payroll_period):
             summary_doc.save(ignore_permissions=True)
             
             # Trigger purchase invoice creation for each completed salary summary
-            print("create_purchase_invoice_on_salary_run REACHED *********************88888")
             create_purchase_invoice_on_salary_run(summary_doc)
-        
         print(f"✓ Marked {len(salary_summaries)} records as completed for period: {payroll_period}")
         
     except Exception as e:
@@ -302,7 +276,7 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
             if account.company == company:
                 salary_account = account
                 break
-        
+
         if not salary_account:
             frappe.msgprint(_("No salary accounts configuration found for company: {0} in salary component {1}").format(company, salary_component_name))
             return
@@ -321,41 +295,43 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
         expense_account = get_valid_expense_account(salary_account.account, company)
         if not expense_account:
             frappe.throw(_("No valid expense account found. Please configure a non-group account in salary accounts."))
-        
-        # Create Purchase Invoice
-        purchase_invoice = frappe.new_doc("Purchase Invoice")
-        purchase_invoice.update({
-            "supplier": salary_account.supplier,
-            "company": salary_account.company,
-            "currency": salary_account.currency or frappe.get_cached_value('Company', company, 'default_currency'),
-            "cost_center": salary_account.cost_center,
-            "bill_no": f"Salary-Run-{doc.period}-{doc.salary_component}",
-            "bill_date": nowdate(),
-            "due_date": nowdate(),
-            "items": []
-        })
-        
-        # Add the salary component as an item
-        item = {
-            "item_code": salary_account.item,
-            "item_name": doc.salary_component,
-            "description": f"{doc.salary_component} - {doc.period}",
-            "qty": 1,
-            "rate": doc.total,
-            "amount": doc.total,
-            "cost_center": salary_account.cost_center,
-            "expense_account": expense_account
-        }
-        purchase_invoice.append("items", item)
-        
-        # Calculate taxes and totals
-        purchase_invoice.run_method("set_missing_values")
-        purchase_invoice.run_method("calculate_taxes_and_totals")
-        
-        # Save the purchase invoice
-        purchase_invoice.insert(ignore_permissions=True)
-        purchase_invoice.submit()
-        
+        if  salary_account.supplier == "Employee":
+            pass
+        else: 
+            # Create Purchase Invoice
+            purchase_invoice = frappe.new_doc("Purchase Invoice")
+            purchase_invoice.update({
+                "supplier": salary_account.supplier,
+                "company": salary_account.company,
+                "currency": salary_account.currency or frappe.get_cached_value('Company', company, 'default_currency'),
+                "cost_center": salary_account.cost_center,
+                "bill_no": f"Salary-Run-{doc.period}-{doc.salary_component}",
+                "bill_date": nowdate(),
+                "due_date": nowdate(),
+                "items": []
+            })
+            
+            # Add the salary component as an item
+            item = {
+                "item_code": salary_account.item,
+                "item_name": doc.salary_component,
+                "description": f"{doc.salary_component} - {doc.period}",
+                "qty": 1,
+                "rate": doc.total,
+                "amount": doc.total,
+                "cost_center": salary_account.cost_center,
+                "expense_account": expense_account
+            }
+            purchase_invoice.append("items", item)
+            
+            # Calculate taxes and totals
+            purchase_invoice.run_method("set_missing_values")
+            purchase_invoice.run_method("calculate_taxes_and_totals")
+            
+            # Save the purchase invoice
+            purchase_invoice.insert(ignore_permissions=True)
+            purchase_invoice.submit()
+            
         # Add comment to salary summary
         doc.add_comment("Comment", f"Purchase Invoice <a href='/app/purchase-invoice/{purchase_invoice.name}'>{purchase_invoice.name}</a> created automatically")
         

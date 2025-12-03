@@ -132,7 +132,6 @@ Response
 
 """
 
-
 @frappe.whitelist(allow_guest=True)
 def user_stock_report(company=None, from_date = None, to_date=None ):
     """
@@ -148,9 +147,6 @@ def user_stock_report(company=None, from_date = None, to_date=None ):
     "to_date": to_date,
     "company": company
     }
-
-
-    
 
     # Get stock data for the company
     columns = get_columns()

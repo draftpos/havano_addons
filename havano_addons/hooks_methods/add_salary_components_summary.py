@@ -74,17 +74,17 @@ def add_salary_components_summary(doc, method):
         new_component_amounts = {}
         
         # Process earnings
-        if doc.get("employee_earnings"):
-            for i, earning in enumerate(doc.employee_earnings):
-                component_name = earning.get("components")
-                amount_usd = flt(earning.get("amount_usd", 0))
-                total_amount = amount_usd
-                if component_name and total_amount > 0:
-                    if component_name not in new_component_amounts:
-                        new_component_amounts[component_name] = 0
-                    new_component_amounts[component_name] += total_amount
-        else:
-            print("No earnings records found")
+        # if doc.get("employee_earnings"):
+        #     for i, earning in enumerate(doc.employee_earnings):
+        #         component_name = earning.get("components")
+        #         amount_usd = flt(earning.get("amount_usd", 0))
+        #         total_amount = amount_usd
+        #         if component_name and total_amount > 0:
+        #             if component_name not in new_component_amounts:
+        #                 new_component_amounts[component_name] = 0
+        #             new_component_amounts[component_name] += total_amount
+        # else:
+        #     print("No earnings records found")
         
         # Process deductions
         if doc.get("employee_deductions"):
@@ -123,6 +123,23 @@ def add_salary_components_summary(doc, method):
         # Create or update records in Salary Summary On Payroll Run with CUMULATIVE totals
         records_created = 0
         records_updated = 0
+        def get_reporting_components():
+            settings = frappe.get_single("Havano Payroll Settings")
+
+            # Make sure the table exists and has rows
+            if not settings.components_for_reporting:
+                frappe.throw("No components found in Components for Reporting.")
+
+            components = []
+            for row in settings.components_for_reporting:
+                components.append({
+                    "component": row.component,
+                    "code": row.code
+                })
+
+            return components
+        allowed_components_for_reporting = get_reporting_components()
+        frappe.log_error(f"allowed components {allowed_components_for_reporting}")
         
         for component_name, new_amount in new_component_amounts.items():
             # Check if summary already exists for this period and component
@@ -136,6 +153,7 @@ def add_salary_components_summary(doc, method):
             )
             
             if existing_summary:
+             
                 # GET EXISTING TOTAL and ADD new amount
                 existing_doc = frappe.get_doc("Salary Summary On Payroll Run", existing_summary[0].name)
                 existing_total = flt(existing_doc.total) or 0
@@ -145,15 +163,19 @@ def add_salary_components_summary(doc, method):
                 existing_doc.save(ignore_permissions=True)
                 records_updated += 1
             else:
-                # Create new record (first employee for this component in this period)
-                summary_doc = frappe.new_doc("Salary Summary On Payroll Run")
-                summary_doc.salary_component = component_name
-                summary_doc.period = payroll_period
-                summary_doc.total = new_amount
-                summary_doc.completed = "no"  # Default to not completed
-                summary_doc.insert(ignore_permissions=True)
-                records_created += 1
-        
+                exists = any(c["component"] == component_name for c in allowed_components_for_reporting)
+                if exists:  
+                    frappe.log_error(f"component exists {exists}")
+                    # Create new record (first employee for this component in this period)
+                    summary_doc = frappe.new_doc("Salary Summary On Payroll Run")
+                    summary_doc.salary_component = component_name
+                    summary_doc.period = payroll_period
+                    summary_doc.total = new_amount
+                    summary_doc.completed = "no"  # Default to not completed
+                    summary_doc.insert(ignore_permissions=True)
+                    records_created += 1
+                else:
+                    frappe.log_error(f"component dont exists {exists}")
         # Check if this is the last employee
        
         is_last_employee = check_if_last_employee(doc, payroll_period)

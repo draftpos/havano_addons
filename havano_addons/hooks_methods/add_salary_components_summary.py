@@ -139,7 +139,7 @@ def add_salary_components_summary(doc, method):
 
             return components
         allowed_components_for_reporting = get_reporting_components()
-        frappe.log_error(f"allowed components {allowed_components_for_reporting}")
+        # frappe.log_error(f"allowed components {allowed_components_for_reporting}")
         
         for component_name, new_amount in new_component_amounts.items():
             # Check if summary already exists for this period and component

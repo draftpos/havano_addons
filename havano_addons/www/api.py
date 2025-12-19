@@ -20,7 +20,7 @@ Exmaple
 GET http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline
 
 or 
-http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline&from_date=2025-01-01&to_date=2025-12-31
+http://localhost:8000/api/method/havano_addons.www.api.user_stock_report?company=Showline&from_date=2025-01-01&to_date=2025-12-31&warehouse=Stores%20-%20SHL
 
 live
 
@@ -133,19 +133,20 @@ Response
 """
 
 @frappe.whitelist(allow_guest=True)
-def user_stock_report(company=None, from_date = None, to_date=None ):
+def user_stock_report(company=None, from_date=None, to_date=None, warehouse=None):
     """
-    Returns stock report for the given user - automatically determines company from user
+    Returns stock report for the given user - automatically determines company from user.
+    Accepts optional `warehouse` (name or comma-separated list) to filter results.
     """
     if not company:
         frappe.throw("company is required")
-
     
     company = frappe.db.get_value("Company", company, "name")
     filters = {
-    "from_date": from_date,
-    "to_date": to_date,
-    "company": company
+        "from_date": from_date,
+        "to_date": to_date,
+        "company": company,
+        "warehouse": warehouse
     }
 
     # Get stock data for the company
@@ -201,6 +202,17 @@ def get_data(filters, company):
     # Filter stock ledger entries by company via warehouse
     conditions = ""
     values = {"company": company}
+
+    # Apply warehouse filter (supports single name or comma-separated list)
+    if filters.get("warehouse"):
+        w = filters.get("warehouse")
+        if isinstance(w, str) and ',' in w:
+            warehouses = tuple([x.strip() for x in w.split(',') if x.strip()])
+            conditions += " AND sle.warehouse IN %(warehouses)s"
+            values["warehouses"] = warehouses
+        else:
+            conditions += " AND sle.warehouse = %(warehouse)s"
+            values["warehouse"] = w
 
     # Apply from_date only if provided
     if filters.get("from_date"):

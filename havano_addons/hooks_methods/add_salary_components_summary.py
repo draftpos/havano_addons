@@ -6,6 +6,7 @@ from frappe import _
 import json
 from .add_salary_component_data import add_salary_component_data_for_report
 
+date_for_purchase_invoice=""
 def add_salary_components_summary(doc, method):
     print(f"=================== add_salary_components_summary REACHED nowwww ========={doc}==========")
     """
@@ -65,6 +66,8 @@ def add_salary_components_summary(doc, method):
             },
             limit=1
         )
+        date_for_purchase_invoice=payroll_period
+        print(f"Date for purchase invoice set to: {date_for_purchase_invoice}")
         
         if completed_summary:
             frappe.throw(_("Payroll period {0} is already completed. Cannot process more entries.").format(payroll_period))
@@ -249,7 +252,7 @@ def mark_period_completed(payroll_period):
             summary_doc.save(ignore_permissions=True)
             
             # Trigger purchase invoice creation for each completed salary summary
-            create_purchase_invoice_on_salary_run(summary_doc)
+            create_purchase_invoice_on_salary_run(summary_doc,payroll_period)
         print(f"✓ Marked {len(salary_summaries)} records as completed for period: {payroll_period}")
         
     except Exception as e:
@@ -257,7 +260,8 @@ def mark_period_completed(payroll_period):
         frappe.log_error(frappe.get_traceback(), "mark_period_completed")
         frappe.throw(_("Failed to mark period as completed: {0}").format(str(e)))
 
-def create_purchase_invoice_on_salary_run(doc, method=None):
+def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
+    
     """
     Create Purchase Invoices from Salary Summary On Payroll Run
     This function is called when completed turns to "yes"
@@ -271,7 +275,7 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
         # Check if this is a Salary Summary On Payroll Run document
         if doc.doctype != "Salary Summary On Payroll Run":
             return
-        
+
         # Get the salary component details
         salary_component_name = doc.salary_component
         salary_component = frappe.get_doc("havano_salary_component", salary_component_name)
@@ -318,10 +322,12 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
         if not expense_account:
             frappe.throw(_("No valid expense account found. Please configure a non-group account in salary accounts."))
         if  salary_account.supplier == "Employee":
-            pass
+            return
         else: 
             # Create Purchase Invoice
             purchase_invoice = frappe.new_doc("Purchase Invoice")
+            if salary_account.supplier == "Employees":
+                return
             purchase_invoice.update({
                 "supplier": salary_account.supplier,
                 "company": salary_account.company,
@@ -330,8 +336,11 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
                 "bill_no": f"Salary-Run-{doc.period}-{doc.salary_component}",
                 "bill_date": nowdate(),
                 "due_date": nowdate(),
-                "items": []
+                "items": [],
             })
+            purchase_invoice.custom_from_payroll = 1
+            purchase_invoice.custom_payroll_period = payroll_period
+
             
             # Add the salary component as an item
             item = {
@@ -353,6 +362,7 @@ def create_purchase_invoice_on_salary_run(doc, method=None):
             # Save the purchase invoice
             purchase_invoice.insert(ignore_permissions=True)
             purchase_invoice.submit()
+            frappe.log_error(f"Purchase Invoice {purchase_invoice.name} created for Salary Summary", "Purchase Invoice Created")
             
         # Add comment to salary summary
         doc.add_comment("Comment", f"Purchase Invoice <a href='/app/purchase-invoice/{purchase_invoice.name}'>{purchase_invoice.name}</a> created automatically")

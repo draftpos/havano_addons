@@ -321,7 +321,7 @@ def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
         expense_account = get_valid_expense_account(salary_account.account, company)
         if not expense_account:
             frappe.throw(_("No valid expense account found. Please configure a non-group account in salary accounts."))
-        if  salary_account.supplier == "Employee":
+        if  salary_account.supplier == "Employees":
             return
         else: 
             # Create Purchase Invoice

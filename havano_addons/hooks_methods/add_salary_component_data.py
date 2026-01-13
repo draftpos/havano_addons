@@ -114,14 +114,6 @@ def add_salary_component_data_for_report(doc, new_component_amounts):
 
                 elif comp.lower() == "payee":
                     pass
-                    
-                    
-
-
-
-        
-
-
         return f"LAPF processed for {employee}. MAIN FUNCTION"
 
     except Exception as e:

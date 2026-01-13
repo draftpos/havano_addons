@@ -48,7 +48,6 @@ def get_data(filters):
             company,
             department,
             designation,
-            employment_type,
             remarks
         FROM `tabCimas`
         WHERE docstatus = 0 {conditions}

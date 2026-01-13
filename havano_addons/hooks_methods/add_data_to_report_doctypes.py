@@ -8,7 +8,7 @@ def add_lapf_data(doc, basic_amount, lapf_amount , employee, company):
     print("THIS IS LAPF FUNCTION DATA *******************")
     if not lapf_amount or not basic_amount:
         print(f"No LAPF or Basic amount found for employee {employee}")
-        pass
+        return
 
     # Calculate LAPF contributions
     amount_employee = round(basic_amount * 0.06, 2)

@@ -39,12 +39,6 @@ frappe.query_reports["LAPF Pension Report"] = {
             "fieldname": "to_date",
             "label": __("To Date"),
             "fieldtype": "Date"
-        },
-        {
-            "fieldname": "employment_type",
-            "label": __("Employment Type"),
-            "fieldtype": "Select",
-            "options": "\nFull-time\nPart-time\nContract\nIntern"
         }
     ]
 };

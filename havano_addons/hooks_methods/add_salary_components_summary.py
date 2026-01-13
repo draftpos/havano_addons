@@ -109,11 +109,11 @@ def add_salary_components_summary(doc, method):
 
         new_component_amounts['PAYEE'] = emp_doc.payee
         new_component_amounts['Aids Levy'] = emp_doc.aids_levy
-        
-        try:
-            add_salary_component_data_for_report(doc, new_component_amounts)
-        except Exception as e:
-            print(e)
+        # reportttttttttt
+        # try:
+        #     add_salary_component_data_for_report(doc, new_component_amounts)
+        # except Exception as e:
+        #     print(e)
 
         if new_component_amounts:
             # for comp, amount in new_component_amounts.items():
@@ -250,6 +250,8 @@ def mark_period_completed(payroll_period):
             summary_doc = frappe.get_doc("Salary Summary On Payroll Run", summary.name)
             summary_doc.completed = "yes"
             summary_doc.save(ignore_permissions=True)
+            print(f"-----------------------Marked summary {summary.name} as completed for period {payroll_period}", "Mark Period Completed")
+            
             
             # Trigger purchase invoice creation for each completed salary summary
             create_purchase_invoice_on_salary_run(summary_doc,payroll_period)
@@ -257,7 +259,7 @@ def mark_period_completed(payroll_period):
         
     except Exception as e:
         print(f"Error in mark_period_completed: {str(e)}")
-        frappe.log_error(frappe.get_traceback(), "mark_period_completed")
+        # frappe.log_error(frappe.get_traceback(), "mark_period_completed")
         frappe.throw(_("Failed to mark period as completed: {0}").format(str(e)))
 
 def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
@@ -285,9 +287,9 @@ def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
             "bill_no": f"Salary-Run-{doc.period}-{doc.salary_component}"
         })
         
-        if existing_invoice:
-            frappe.msgprint(_("Purchase Invoice already exists for this salary summary: {0}").format(existing_invoice))
-            return
+        # if existing_invoice:
+            # frappe.msgprint(_("Purchase Invoice already exists for this salary summary: {0}").format(existing_invoice))
+            # return
         
         # Get company from document or use default
         company = getattr(doc, 'company', None)
@@ -321,13 +323,14 @@ def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
         expense_account = get_valid_expense_account(salary_account.account, company)
         if not expense_account:
             frappe.throw(_("No valid expense account found. Please configure a non-group account in salary accounts."))
-        if  salary_account.supplier == "Employees":
-            return
+        # if  salary_account.supplier == "Employee":
+        #     returnSS
         else: 
+            # log_error(f"Valid expense account found: {expense_account}", "Create Purchase Invoice on Salary Run")
             # Create Purchase Invoice
             purchase_invoice = frappe.new_doc("Purchase Invoice")
-            if salary_account.supplier == "Employees":
-                return
+            # if salary_account.supplier == "Employees":
+            #     return
             purchase_invoice.update({
                 "supplier": salary_account.supplier,
                 "company": salary_account.company,
@@ -362,7 +365,7 @@ def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
             # Save the purchase invoice
             purchase_invoice.insert(ignore_permissions=True)
             purchase_invoice.submit()
-            frappe.log_error(f"Purchase Invoice {purchase_invoice.name} created for Salary Summary", "Purchase Invoice Created")
+            # frappe.log_error(f"Purchase Invoice {purchase_invoice.name} created for Salary Summary", "Purchase Invoice Created")
             
         # Add comment to salary summary
         doc.add_comment("Comment", f"Purchase Invoice <a href='/app/purchase-invoice/{purchase_invoice.name}'>{purchase_invoice.name}</a> created automatically")
@@ -375,7 +378,7 @@ def create_purchase_invoice_on_salary_run(doc,payroll_period, method=None):
         # Truncate error message to 140 characters for log title
         error_msg = str(e)
         log_title = error_msg[:140] if len(error_msg) > 140 else error_msg
-        frappe.log_error(frappe.get_traceback(), log_title)
+        # frappe.log_error(frappe.get_traceback(), log_title)
         frappe.throw(_("Failed to create purchase invoice: {0}").format(error_msg))
 
 def get_valid_expense_account(account, company):

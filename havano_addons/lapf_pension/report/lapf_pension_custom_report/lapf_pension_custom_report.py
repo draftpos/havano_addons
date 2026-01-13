@@ -25,7 +25,6 @@ def get_columns():
         {"label": "Company", "fieldname": "company", "fieldtype": "Link", "options": "Company", "width": 120},
         {"label": "Department", "fieldname": "department", "fieldtype": "Link", "options": "Department", "width": 120},
         {"label": "Designation", "fieldname": "designation", "fieldtype": "Link", "options": "Designation", "width": 120},
-        {"label": "Employment Type", "fieldname": "employment_type", "fieldtype": "Data", "width": 120},
         {"label": "Remarks", "fieldname": "remarks", "fieldtype": "Small Text", "width": 200}
     ]
 
@@ -48,7 +47,6 @@ def get_data(filters):
             company,
             department,
             designation,
-            employment_type,
             remarks
         FROM `tabLAPF Pension`
         WHERE docstatus = 0 {conditions}
@@ -77,8 +75,7 @@ def get_conditions(filters):
         conditions += " AND date >= %(from_date)s"
     if filters.get("to_date"):
         conditions += " AND date <= %(to_date)s"
-    if filters.get("employment_type"):
-        conditions += " AND employment_type = %(employment_type)s"
+
     
     return conditions
 
@@ -107,7 +104,6 @@ def add_totals_row(data):
         "company": "",
         "department": "",
         "designation": "",
-        "employment_type": "",
         "remarks": "",
         "bold": 1
     }
